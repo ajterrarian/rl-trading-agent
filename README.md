@@ -1,6 +1,6 @@
 # RL Trading Agent
 
-From-scratch Deep Q-Network (DQN) trading agent. Full project spec (objectives, architecture, timeline, learning resources) lives in the project doc — see `PROJECT_SPEC.md`.
+From-scratch Deep Q-Network (DQN) trading agent.
 
 **What this proves, and what it doesn't (read before judging results):** this project is not trying to prove the agent is profitable. Two to three weeks of live paper trading cannot prove that, and it's not the point. The point is engineering rigor: a correctly-implemented DQN, honest train/validation/test separation with no lookahead bias, a fair comparison against simple baselines (buy-and-hold, random, do-nothing), and an honest writeup of the gap between backtest and live performance — including if the agent underperforms the baselines. That result is reportable, not a failure to hide.
 
@@ -8,7 +8,7 @@ From-scratch Deep Q-Network (DQN) trading agent. Full project spec (objectives, 
 
 ## Status
 
-- [ ] Day 1: RL fundamentals (MDP, Q-learning, Bellman update, replay buffer, target network) — done
+- [x] Day 1: RL fundamentals (MDP, Q-learning, Bellman update, replay buffer, target network) — done
 - [ ] Day 2: DQN implemented from scratch, validated against `CartPole-v1`
 - [ ] Days 3-4: Data pipeline + custom trading environment
 - [ ] Days 5-7: Train on trading environment, validate vs. baselines
