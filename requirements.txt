@@ -1,0 +1,9 @@
+torch
+gymnasium[classic-control]
+numpy
+pandas
+yfinance
+alpaca-py
+python-dotenv
+pytest
+matplotlib
