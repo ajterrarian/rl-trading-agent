@@ -9,8 +9,8 @@ From-scratch Deep Q-Network (DQN) trading agent.
 ## Status
 
 - [x] Day 1: RL fundamentals (MDP, Q-learning, Bellman update, replay buffer, target network) — done
-- [ ] Day 2: DQN implemented from scratch, validated against `CartPole-v1`
-- [ ] Days 3-4: Data pipeline + custom trading environment
+- [x] Day 2: DQN implemented from scratch, validated against `CartPole-v1` — done
+- [x] Days 3-4: Data pipeline + custom trading environment — done
 - [ ] Days 5-7: Train on trading environment, validate vs. baselines
 - [ ] Days 8-10: Risk layer, Alpaca paper execution, deploy frozen policy
 - [ ] Weeks 3-5: Live paper-trading window (monitoring only, no further training)

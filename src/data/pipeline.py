@@ -2,7 +2,7 @@ import yfinance as yf
 import pandas as pd
 
 def get_data(ticker = "SPY", start = "2001-01-01", end = None):
-    df = yf.download(ticker, start = start, end = end)
+    df = yf.download(ticker, start = start, end = end, multi_level_index = False)
     return df
 
 def add_features(df):
