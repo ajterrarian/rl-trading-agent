@@ -11,7 +11,7 @@ import random
 import sys
 import os
 sys.path.append(os.path.join(os.path.dirname(__file__), "..", "data"))
-from pipeline import get_data, add_features, chronological_split
+from src.data.pipeline import get_data, add_features, chronological_split
 
 class MarketTradingEnv(gym.Env):
     #custom env for market trading
