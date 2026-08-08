@@ -3,6 +3,7 @@ import os
 import torch
 import torch.optim as optim
 import numpy as np
+import collections
 
 from src.agent.dqn import QNetwork, ReplayMemory, Agent
 from src.data.pipeline import get_data, add_features, chronological_split
@@ -77,6 +78,38 @@ for i_episode in range(num_episodes):
             break
 
    print(f"Episode {i_episode + 1}/{num_episodes} | Final Net Worth: ${current_net_worth:,.2f}")
+
+
+greedy_episodes = 1
+greedy_episode_net_worths = []
+counter = collections.Counter()
+
+env.reset()
+for i_episode in range(greedy_episodes):
+   state, _ = env.reset()
+   state = torch.tensor(state, dtype=torch.float32, device=device).unsqueeze(0)
+
+   greedy_current_net_worth = env.initial_balance
+
+   while True:
+        action = agent.act_greedy(state)
+        observation, reward, terminated, truncated, info = env.step(action.item())
+
+        done = terminated or truncated
+        reward_tensor = torch.tensor([reward], device = device)
+        greedy_current_net_worth = info["Net Worth"]
+
+        if done:
+            next_state = None
+        else:
+            next_state = torch.tensor(observation, dtype = torch.float32, device = device).unsqueeze(0)
+
+        if done:
+            greedy_episode_net_worths.append(greedy_current_net_worth)
+            break
+
+        counter.update([action.item()])
+   print(f"Greedy Episode {i_episode + 1}/{greedy_episodes} | Greedy Final Net Worth: ${greedy_current_net_worth:,.2f} | Counter = {counter}")
 
 env.close()
 
