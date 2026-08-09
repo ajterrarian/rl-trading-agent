@@ -1,0 +1,38 @@
+name: Daily Trading Execution
+
+on:
+  schedule:
+    - cron: '30 21 * * 1-5'  # 21:30 UTC, Mon-Fri after market close
+  workflow_dispatch:  # so i can trigger manually from github for testing
+
+permissions:
+  contents: write  # required so the workflow can commit state/ back to the repo
+
+jobs:
+  execute:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.9'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run daily execution
+        env:
+          APCA_API_KEY_ID: ${{ secrets.APCA_API_KEY_ID }}
+          APCA_API_SECRET_KEY: ${{ secrets.APCA_API_SECRET_KEY }}
+        run: python -m scripts.run_daily_execution
+
+      - name: Commit updated state
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add state/
+          git diff --staged --quiet || git commit -m "Update state [automated]"
+          git push
