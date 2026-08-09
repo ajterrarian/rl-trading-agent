@@ -13,6 +13,7 @@ from src.data.pipeline import get_data, add_features
 from src.risk.kill_switch import check_kill_switch
 from src.risk.data_sanity import check_data_sanity
 from src.risk.position_sizing import compute_order_delta
+from src.monitoring.trade_log import log_daily_result
 
 SYMBOL = "SPY"
 CHECKPOINT_PATH = os.path.join("checkpoints", "dqn_trading_v1.pt")
@@ -53,6 +54,7 @@ def main():
 
     # 1. Kill switch
     if check_kill_switch(client):
+        log_daily_result(status="kill_switch", note="halted by kill switch")
         return
 
     # 2. Fetch enough trailing history for 10-day rolling features.
@@ -62,6 +64,7 @@ def main():
 
     if df.empty:
         print("[EXECUTION] No feature rows available after fetch. Skipping today.")
+        log_daily_result(status="no_data", note="no feature rows after fetch")
         return
 
     latest = df.iloc[-1]
@@ -72,6 +75,8 @@ def main():
 
     # 3. Data sanity check
     if not check_data_sanity(current_price, ret, ma_10, volatility_10):
+        log_daily_result(status="data_rejected", current_price=current_price, ret=ret,
+                          ma_10=ma_10, volatility_10=volatility_10, note="failed data sanity check")
         return
 
     # 4. Current position and account state
@@ -89,6 +94,9 @@ def main():
     order_delta = compute_order_delta(action, equity, current_price, current_shares)
     if order_delta == 0:
         print("[EXECUTION] No trade needed -- already positioned correctly.")
+        log_daily_result(status="no_trade", current_price=current_price, ret=ret, ma_10=ma_10,
+                          volatility_10=volatility_10, action=action, shares_before=current_shares,
+                          order_delta=0, equity=equity)
         return
 
     side = OrderSide.BUY if order_delta > 0 else OrderSide.SELL
@@ -96,6 +104,9 @@ def main():
     submitted = client.submit_order(order_data=order)
     print(f"[EXECUTION] Submitted {side.value} order for {abs(order_delta)} shares. Order ID: {submitted.id}")
 
+    log_daily_result(status="traded", current_price=current_price, ret=ret, ma_10=ma_10,
+                      volatility_10=volatility_10, action=action, shares_before=current_shares,
+                      order_delta=order_delta, equity=equity, note=f"order_id={submitted.id}")
 
 if __name__ == "__main__":
     main()
