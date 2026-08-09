@@ -7,3 +7,4 @@ data/*.csv
 data/*.db
 *.pt
 state/
+!checkpoints/dqn_trading_v1.pt
