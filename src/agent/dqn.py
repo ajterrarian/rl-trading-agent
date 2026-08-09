@@ -93,6 +93,11 @@ class Agent:
             return torch.tensor([[random_action]], device = self.device, dtype = torch.long)
 
 
+    def act_greedy(self, state):
+        with torch.no_grad():
+            return self.policy_net(state).argmax(dim = 1).view(1, 1)
+
+
     def optimize_model(self):
         #performs one step of the optimization on the policy network
         if len(self.memory) < self.batch_size:

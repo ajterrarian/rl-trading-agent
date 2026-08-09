@@ -120,3 +120,11 @@ print(f"Training Complete!")
 print(f"Initial Starting Balance: ${env.initial_balance:,.2f}")
 print(f"Average Final Net Worth across all episodes: ${final_avg_net_worth:,.2f}")
 
+
+# checkpointing
+checkpoint_dir = "checkpoints"
+os.makedirs(checkpoint_dir, exist_ok = True)
+checkpoint_path = os.path.join(checkpoint_dir, "dqn_trading_v1.pt")
+
+torch.save(policy_net.state_dict(), checkpoint_path)
+print(f"Saved policy network checkpoint to {checkpoint_path}")
